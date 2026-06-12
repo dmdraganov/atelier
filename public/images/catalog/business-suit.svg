@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Деловой костюм">
+  <rect width="640" height="420" fill="#f8fafc"/>
+  <path d="M230 92h180l36 248H194l36-248Z" fill="#1e293b"/>
+  <path d="M292 92h56l24 248H268l24-248Z" fill="#f8fafc"/>
+  <path d="M292 92l28 66 28-66" fill="none" stroke="#94a3b8" stroke-width="8" stroke-linejoin="round"/>
+</svg>

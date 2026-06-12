@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Классическое платье">
+  <rect width="640" height="420" fill="#f8fafc"/>
+  <path d="M271 80h98l20 60-45 44 68 156H228l68-156-45-44 20-60Z" fill="#334155"/>
+  <path d="M286 106c16 24 52 24 68 0" fill="none" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M250 140h140" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+</svg>

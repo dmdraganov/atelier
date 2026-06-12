@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Классические брюки">
+  <rect width="640" height="420" fill="#f8fafc"/>
+  <path d="M252 82h136l22 266h-82l-8-170-8 170h-82l22-266Z" fill="#334155"/>
+  <path d="M254 82h132" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
+  <path d="M320 96v72" stroke="#f59e0b" stroke-width="6"/>
+</svg>
