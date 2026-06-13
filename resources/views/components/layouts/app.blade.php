@@ -10,7 +10,7 @@
 <body class="m-0 font-sans antialiased selection:bg-[#f3dbe0] selection:text-[#3d1028]">
     <div class="flex min-h-screen flex-col">
         <header class="sticky top-0 z-30 border-b border-[#e3d4da]/80 bg-[#fffdfb]/92 backdrop-blur-xl">
-            <div class="atelier-container flex min-h-[76px] items-center justify-between gap-6 py-3 max-[980px]:min-h-0 max-[980px]:flex-col max-[980px]:items-start">
+            <div class="atelier-container site-header-inner">
                 <a class="group inline-flex items-center gap-3 text-lg font-black text-[#3d1028] no-underline" href="{{ route('home') }}">
                     <span class="grid size-11 place-items-center rounded-lg bg-[#5a1839] font-serif text-xl font-semibold text-white shadow-lg shadow-[#5a1839]/20">A</span>
                     <span class="leading-none">
@@ -18,7 +18,11 @@
                         <span class="block text-xs font-bold uppercase tracking-[.08em] text-[#8a6875]">custom tailoring</span>
                     </span>
                 </a>
-                <nav class="flex flex-wrap items-center justify-end gap-1.5 max-[980px]:justify-start">
+                <button class="site-menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" data-menu-toggle>
+                    <span class="site-menu-toggle__bars" aria-hidden="true"></span>
+                    <span class="sr-only">Открыть меню</span>
+                </button>
+                <nav class="site-nav" id="site-nav" data-menu>
                     <a class="nav-link" href="{{ route('home') }}#services">Услуги</a>
                     <a class="nav-link" href="{{ route('catalog.index') }}">Каталог</a>
                     <a class="nav-link" href="{{ route('home') }}#process">Как заказать</a>
@@ -49,8 +53,9 @@
             @endif
 
             @if ($errors->any())
-                <div class="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-800">
-                    <strong>Проверьте данные:</strong>
+                <div class="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-800" role="alert">
+                    <strong>Проверьте поля, отмеченные красным.</strong>
+                    <p class="m-0 mt-1 font-semibold">Нужно исправить {{ trans_choice('{1} одну ошибку|[2,4] :count ошибки|[5,*] :count ошибок', $errors->count()) }}.</p>
                     <ul class="mb-0 mt-2 grid gap-1 pl-5">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>

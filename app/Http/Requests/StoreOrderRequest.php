@@ -132,6 +132,30 @@ class StoreOrderRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'tailoring_service_id.required' => 'Выберите услугу.',
+            'tailoring_service_id.exists' => 'Выбранная услуга недоступна.',
+            'clothing_model_id.exists' => 'Выбранная модель недоступна.',
+            'material_id.exists' => 'Выбранный материал недоступен.',
+            'quantity.integer' => 'Количество должно быть целым числом.',
+            'quantity.min' => 'Количество должно быть не меньше 1.',
+            'quantity.max' => 'Количество должно быть не больше 20.',
+            'measurement_values.array' => 'Проверьте блок с мерками.',
+            'measurement_values.*.max' => 'Значение мерки слишком длинное.',
+            'parameters.array' => 'Проверьте дополнительные параметры заказа.',
+            'parameters.*.key.max' => 'Название параметра слишком длинное.',
+            'parameters.*.value.max' => 'Значение параметра слишком длинное.',
+            'customer_comment.max' => 'Комментарий должен быть не длиннее 2000 символов.',
+            'reference_images.array' => 'Проверьте загруженные референсы.',
+            'reference_images.max' => 'Можно загрузить не больше 5 изображений.',
+            'reference_images.*.file' => 'Каждый референс должен быть файлом.',
+            'reference_images.*.mimes' => 'Референсы должны быть в формате JPG, PNG или WebP.',
+            'reference_images.*.max' => 'Размер каждого референса должен быть не больше 4 МБ.',
+        ];
+    }
+
     protected function prepareForValidation(): void
     {
         if (blank($this->input('clothing_model_id'))) {

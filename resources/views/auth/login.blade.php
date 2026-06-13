@@ -10,11 +10,17 @@
             <h2 class="mb-2 mt-0 text-2xl font-black text-[#3d1028]">Вход</h2>
             <label class="field-label">
                 <span>Email</span>
-                <input class="field-control" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email">
+                <input class="field-control @error('email') field-control-error @enderror" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email" aria-describedby="email-error">
+                @error('email')
+                    <span class="field-error" id="email-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="field-label">
                 <span>Пароль</span>
-                <input class="field-control" name="password" type="password" required autocomplete="current-password">
+                <input class="field-control @error('password') field-control-error @enderror" name="password" type="password" required autocomplete="current-password" aria-describedby="password-error">
+                @error('password')
+                    <span class="field-error" id="password-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="flex items-center gap-2.5 text-sm font-bold text-[#4c2d3d]">
                 <input class="size-4 cursor-pointer rounded border-[#d8c4cc] accent-[#5a1839]" name="remember" type="checkbox" value="1">

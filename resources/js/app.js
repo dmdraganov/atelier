@@ -6,6 +6,79 @@ document.querySelectorAll('[data-confirm]').forEach((form) => {
     });
 });
 
+const menuToggle = document.querySelector('[data-menu-toggle]');
+const menu = document.querySelector('[data-menu]');
+
+if (menuToggle && menu) {
+    const setMenuOpen = (open) => {
+        menu.classList.toggle('is-open', open);
+        document.body.classList.toggle('is-menu-open', open);
+        menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+
+    menuToggle.addEventListener('click', () => {
+        setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    menu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setMenuOpen(false));
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            setMenuOpen(false);
+        }
+    });
+}
+
+document.querySelectorAll('input[type="tel"][name="phone"]').forEach((input) => {
+    const formatPhone = () => {
+        let digits = input.value.replace(/\D/g, '');
+
+        if (digits.startsWith('8')) {
+            digits = `7${digits.slice(1)}`;
+        }
+
+        if (digits && !digits.startsWith('7')) {
+            digits = `7${digits}`;
+        }
+
+        digits = digits.slice(0, 11);
+
+        const parts = [
+            '+7',
+            digits.slice(1, 4),
+            digits.slice(4, 7),
+            digits.slice(7, 9),
+            digits.slice(9, 11),
+        ];
+
+        let formatted = parts[0];
+
+        if (parts[1]) {
+            formatted += ` ${parts[1]}`;
+        }
+
+        if (parts[2]) {
+            formatted += ` ${parts[2]}`;
+        }
+
+        if (parts[3]) {
+            formatted += `-${parts[3]}`;
+        }
+
+        if (parts[4]) {
+            formatted += `-${parts[4]}`;
+        }
+
+        input.value = digits ? formatted : '';
+    };
+
+    input.addEventListener('input', formatPhone);
+    input.addEventListener('blur', formatPhone);
+    formatPhone();
+});
+
 const priceForm = document.querySelector('[data-price-form]');
 
 if (priceForm) {

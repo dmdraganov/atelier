@@ -16,7 +16,14 @@ class UserForm
             ->components([
                 TextInput::make('name')->label('Имя')->required()->maxLength(255),
                 TextInput::make('email')->label('Email')->email()->required()->maxLength(255)->unique(ignoreRecord: true),
-                TextInput::make('phone')->label('Телефон')->maxLength(40),
+                TextInput::make('phone')
+                    ->label('Телефон')
+                    ->tel()
+                    ->maxLength(40)
+                    ->regex('/^(?:\+7|8)[\s-]?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/')
+                    ->validationMessages([
+                        'regex' => 'Укажите телефон в формате +7 900 000-00-00.',
+                    ]),
                 Select::make('role')
                     ->label('Роль')
                     ->options(collect(UserRole::cases())->mapWithKeys(fn (UserRole $role): array => [$role->value => $role->label()])->all())

@@ -22,6 +22,10 @@ class AuthenticatedSessionController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+        ], [
+            'email.required' => 'Укажите email.',
+            'email.email' => 'Введите корректный email, например name@example.com.',
+            'password.required' => 'Введите пароль.',
         ]);
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {

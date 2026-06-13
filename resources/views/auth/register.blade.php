@@ -10,19 +10,31 @@
             <h2 class="mb-2 mt-0 text-2xl font-black text-[#3d1028]">Контактные данные</h2>
             <label class="field-label">
                 <span>Имя</span>
-                <input class="field-control" name="name" value="{{ old('name') }}" required autofocus autocomplete="name">
+                <input class="field-control @error('name') field-control-error @enderror" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" aria-describedby="name-error">
+                @error('name')
+                    <span class="field-error" id="name-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="field-label">
                 <span>Email</span>
-                <input class="field-control" name="email" type="email" value="{{ old('email') }}" required autocomplete="email">
+                <input class="field-control @error('email') field-control-error @enderror" name="email" type="email" value="{{ old('email') }}" required autocomplete="email" aria-describedby="email-error">
+                @error('email')
+                    <span class="field-error" id="email-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="field-label">
                 <span>Телефон</span>
-                <input class="field-control" name="phone" value="{{ old('phone') }}" autocomplete="tel" placeholder="+7 900 000-00-00">
+                <input class="field-control @error('phone') field-control-error @enderror" name="phone" type="tel" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" maxlength="16" pattern="\+7\s[0-9]{3}\s[0-9]{3}-[0-9]{2}-[0-9]{2}" placeholder="+7 900 000-00-00" title="Введите телефон в формате +7 900 000-00-00" aria-describedby="phone-error">
+                @error('phone')
+                    <span class="field-error" id="phone-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="field-label">
                 <span>Пароль</span>
-                <input class="field-control" name="password" type="password" required autocomplete="new-password">
+                <input class="field-control @error('password') field-control-error @enderror" name="password" type="password" required autocomplete="new-password" aria-describedby="password-error">
+                @error('password')
+                    <span class="field-error" id="password-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="field-label">
                 <span>Повторите пароль</span>

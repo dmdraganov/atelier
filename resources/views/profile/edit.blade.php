@@ -47,16 +47,22 @@
             <h2 class="m-0 text-2xl font-black text-[#3d1028]">Контактные данные</h2>
             <label class="field-label">
                 <span>Имя</span>
-                <input class="field-control" name="name" value="{{ old('name', $user->name) }}" required autocomplete="name">
+                <input class="field-control @error('name') field-control-error @enderror" name="name" value="{{ old('name', $user->name) }}" required minlength="2" maxlength="255" autocomplete="name" aria-describedby="name-error">
+                @error('name')
+                    <span class="field-error" id="name-error">{{ $message }}</span>
+                @enderror
             </label>
             <label class="field-label">
                 <span>Email для входа</span>
-                <input class="field-control" value="{{ $user->email }}" disabled>
+                <input class="field-control" type="email" value="{{ $user->email }}" disabled>
             </label>
             <label class="field-label">
                 <span>Телефон</span>
-                <input class="field-control" name="phone" value="{{ old('phone', $user->phone) }}" autocomplete="tel" placeholder="+7 900 000-00-00">
-                <span class="field-help">Номер помогает администратору быстрее уточнить детали заказа.</span>
+                <input class="field-control @error('phone') field-control-error @enderror" name="phone" type="tel" value="{{ old('phone', $user->phone) }}" autocomplete="tel" inputmode="tel" maxlength="16" pattern="\+7\s[0-9]{3}\s[0-9]{3}-[0-9]{2}-[0-9]{2}" placeholder="+7 900 000-00-00" title="Введите телефон в формате +7 900 000-00-00" aria-describedby="phone-help phone-error">
+                <span class="field-help" id="phone-help">Номер помогает администратору быстрее уточнить детали заказа.</span>
+                @error('phone')
+                    <span class="field-error" id="phone-error">{{ $message }}</span>
+                @enderror
             </label>
             <button class="btn btn-primary min-h-12" type="submit">Сохранить изменения</button>
         </form>
