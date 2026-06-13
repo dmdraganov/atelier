@@ -5,5 +5,5 @@
         @endforeach
     </dl>
 @else
-    <p class="m-0 leading-relaxed text-slate-600">Данные не указаны.</p>
+    <p class="m-0 leading-relaxed text-[#6f5b66]">Данные не указаны.</p>
 @endif

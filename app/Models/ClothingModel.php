@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ComplexityLevel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClothingModel extends Model
@@ -41,5 +42,10 @@ class ClothingModel extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function tailoringServices(): BelongsToMany
+    {
+        return $this->belongsToMany(TailoringService::class)->withTimestamps();
     }
 }

@@ -6,8 +6,10 @@ use App\Enums\ComplexityLevel;
 use App\Enums\UrgencyLevel;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\ClothingModel;
+use App\Models\MeasurementType;
 use App\Models\Material;
 use App\Models\Order;
+use App\Models\TailoringService;
 use App\Services\OrderCreationService;
 use App\Services\OrderStatusService;
 use DomainException;
@@ -19,7 +21,7 @@ class OrderController extends Controller
     {
         $orders = request()->user()
             ->customerOrders()
-            ->with(['clothingModel', 'material'])
+            ->with(['clothingModel', 'tailoringService', 'material'])
             ->latest()
             ->paginate(10);
 
@@ -40,9 +42,27 @@ class OrderController extends Controller
             ->orderBy('name')
             ->get();
 
+        $tailoringServices = TailoringService::query()
+            ->where('is_active', true)
+            ->with([
+                'clothingModels:id',
+                'measurementTypes' => fn ($query) => $query->where('is_active', true),
+            ])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        $measurementTypes = MeasurementType::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
         return view('orders.create', [
             'models' => $models,
             'materials' => $materials,
+            'tailoringServices' => $tailoringServices,
+            'measurementTypes' => $measurementTypes,
             'complexities' => ComplexityLevel::cases(),
             'urgencies' => UrgencyLevel::cases(),
         ]);
@@ -62,7 +82,7 @@ class OrderController extends Controller
         $this->authorize('view', $order);
 
         return view('orders.show', [
-            'order' => $order->load(['clothingModel.category', 'material', 'referenceImages', 'master']),
+            'order' => $order->load(['clothingModel.category', 'tailoringService', 'material', 'referenceImages', 'master']),
         ]);
     }
 

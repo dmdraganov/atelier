@@ -16,6 +16,7 @@ class Order extends Model
         'customer_id',
         'master_id',
         'clothing_model_id',
+        'tailoring_service_id',
         'material_id',
         'status',
         'quantity',
@@ -60,6 +61,11 @@ class Order extends Model
     public function clothingModel(): BelongsTo
     {
         return $this->belongsTo(ClothingModel::class);
+    }
+
+    public function tailoringService(): BelongsTo
+    {
+        return $this->belongsTo(TailoringService::class);
     }
 
     public function material(): BelongsTo

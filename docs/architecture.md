@@ -56,7 +56,9 @@ Main models:
 - `User`
 - `ClothingCategory`
 - `ClothingModel`
+- `TailoringService`
 - `Material`
+- `MeasurementType`
 - `Order`
 - `OrderReferenceImage`
 

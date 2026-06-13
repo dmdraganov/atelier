@@ -51,7 +51,9 @@ Handled by Filament:
 /admin/orders
 /admin/clothing-categories
 /admin/clothing-models
+/admin/tailoring-services
 /admin/materials
+/admin/measurement-types
 /admin/users
 ```
 

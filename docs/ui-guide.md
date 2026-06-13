@@ -57,6 +57,7 @@ Catalog cards should show:
 The order form should include:
 
 - clothing model;
+- tailoring service;
 - material;
 - quantity;
 - complexity;
@@ -78,6 +79,16 @@ References
 Comment
 Estimated price
 ```
+
+Measurement labels must be loaded from the database and displayed as fixed labels. Customers should enter only values and must not edit measurement keys.
+
+The selected tailoring service controls which form fields are visible and required:
+
+- model-based tailoring requires clothing model, material, measurements, quantity, complexity, and urgency;
+- alteration requires clothing model and relevant measurements, but not material;
+- fixed consultation does not require clothing model, material, measurements, quantity, complexity, or urgency.
+
+The model selector must show only clothing models applicable to the selected tailoring service.
 
 ### Order Status Badges
 

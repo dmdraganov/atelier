@@ -8,6 +8,7 @@ use App\Enums\UrgencyLevel;
 use App\Models\ClothingModel;
 use App\Models\Material;
 use App\Models\Order;
+use App\Models\TailoringService;
 use App\Models\User;
 use App\Services\OrderPriceCalculator;
 use Illuminate\Database\Seeder;
@@ -25,6 +26,8 @@ class OrderSeeder extends Seeder
         $shirt = ClothingModel::query()->where('slug', 'mens-shirt')->firstOrFail();
         $cotton = Material::query()->where('name', 'Хлопок')->firstOrFail();
         $silk = Material::query()->where('name', 'Шелк')->firstOrFail();
+        $customTailoring = TailoringService::query()->where('slug', 'custom-tailoring')->firstOrFail();
+        $occasionLook = TailoringService::query()->where('slug', 'occasion-look')->firstOrFail();
         $calculator = app(OrderPriceCalculator::class);
 
         foreach ([
@@ -33,6 +36,7 @@ class OrderSeeder extends Seeder
                 'customer_id' => $customer->id,
                 'master_id' => $master->id,
                 'clothing_model_id' => $dress->id,
+                'tailoring_service_id' => $occasionLook->id,
                 'material_id' => $silk->id,
                 'status' => OrderStatus::Confirmed,
                 'quantity' => 1,
@@ -48,6 +52,7 @@ class OrderSeeder extends Seeder
                 'customer_id' => $customer->id,
                 'master_id' => null,
                 'clothing_model_id' => $shirt->id,
+                'tailoring_service_id' => $customTailoring->id,
                 'material_id' => $cotton->id,
                 'status' => OrderStatus::New,
                 'quantity' => 2,
@@ -60,6 +65,7 @@ class OrderSeeder extends Seeder
             ],
         ] as $orderData) {
             $model = ClothingModel::query()->findOrFail($orderData['clothing_model_id']);
+            $service = TailoringService::query()->findOrFail($orderData['tailoring_service_id']);
             $material = Material::query()->findOrFail($orderData['material_id']);
 
             Order::query()->updateOrCreate(
@@ -67,6 +73,7 @@ class OrderSeeder extends Seeder
                 [
                     ...$orderData,
                     'preliminary_price' => $calculator->calculate(
+                        $service,
                         $model,
                         $material,
                         $orderData['complexity'],

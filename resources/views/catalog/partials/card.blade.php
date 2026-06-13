@@ -1,21 +1,21 @@
-<article class="atelier-card group overflow-hidden transition hover:border-teal-200 hover:shadow-2xl hover:shadow-slate-950/[.08]">
-    <div class="grid aspect-[4/3] place-items-center overflow-hidden bg-slate-50 text-6xl font-black text-slate-300">
+<article class="atelier-card group overflow-hidden transition hover:border-[#d8b37a] hover:shadow-2xl hover:shadow-[#5a1839]/10">
+    <div class="grid aspect-[4/3] place-items-center overflow-hidden bg-[#f4e6ea] text-6xl font-black text-[#b86b7a]">
         @if ($model->image_path)
-            <img class="h-full w-full object-cover transition duration-300 group-hover:opacity-95 motion-reduce:transition-none" src="{{ asset($model->image_path) }}" alt="{{ $model->name }}">
+            <img class="h-full w-full object-cover transition duration-300 group-hover:opacity-92 motion-reduce:transition-none" src="{{ asset($model->image_path) }}" alt="{{ $model->name }}">
         @else
-            {{ mb_substr($model->name, 0, 1) }}
+            <span class="atelier-serif">{{ mb_substr($model->name, 0, 1) }}</span>
         @endif
     </div>
     <div class="p-5">
         <div class="flex items-start justify-between gap-3">
-            <span class="eyebrow">{{ $model->category->name }}</span>
-            <span class="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">{{ $model->estimated_days }} дн.</span>
+            <span class="section-kicker">{{ $model->category->name }}</span>
+            <span class="shrink-0 rounded-full bg-[#f3dbe0] px-3 py-1.5 text-xs font-black text-[#5a1839]">{{ $model->estimated_days }} дн.</span>
         </div>
-        <h3 class="my-3 text-xl font-extrabold text-slate-950">{{ $model->name }}</h3>
-        <p class="line-clamp-3 min-h-[84px] leading-7 text-slate-600">{{ $model->description }}</p>
-        <div class="my-5 flex items-center justify-between gap-3 border-t border-slate-200 pt-4 text-sm">
-            <span class="font-semibold text-slate-500">Базовая цена</span>
-            <strong class="text-base text-slate-950">от <x-price :value="$model->base_price" /></strong>
+        <h3 class="atelier-serif my-3 text-3xl leading-none text-[#3d1028]">{{ $model->name }}</h3>
+        <p class="line-clamp-3 min-h-[84px] leading-7 text-[#6f5b66]">{{ $model->description }}</p>
+        <div class="my-5 flex items-center justify-between gap-3 border-t border-[#e3d4da] pt-4 text-sm">
+            <span class="font-bold text-[#8a6875]">Базовая стоимость</span>
+            <strong class="text-base text-[#3d1028]">от <x-price :value="$model->base_price" /></strong>
         </div>
         <div class="flex flex-wrap items-center gap-3">
             <a class="btn btn-secondary" href="{{ route('catalog.show', $model) }}">Подробнее</a>

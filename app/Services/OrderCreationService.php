@@ -8,6 +8,7 @@ use App\Enums\UrgencyLevel;
 use App\Models\ClothingModel;
 use App\Models\Material;
 use App\Models\Order;
+use App\Models\TailoringService;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -24,19 +25,27 @@ class OrderCreationService
     public function create(User $customer, array $data): Order
     {
         return DB::transaction(function () use ($customer, $data): Order {
-            $clothingModel = ClothingModel::query()->findOrFail($data['clothing_model_id']);
-            $material = Material::query()->findOrFail($data['material_id']);
-            $complexity = ComplexityLevel::from($data['complexity']);
-            $urgency = UrgencyLevel::from($data['urgency']);
-            $measurements = $this->cleanKeyValueData($data['measurements'] ?? []);
+            $tailoringService = TailoringService::query()
+                ->with('measurementTypes')
+                ->findOrFail($data['tailoring_service_id']);
+            $clothingModel = $tailoringService->requires_model
+                ? ClothingModel::query()->findOrFail($data['clothing_model_id'])
+                : null;
+            $material = $tailoringService->requires_material
+                ? Material::query()->findOrFail($data['material_id'])
+                : null;
+            $complexity = ComplexityLevel::from($data['complexity'] ?? ComplexityLevel::Simple->value);
+            $urgency = UrgencyLevel::from($data['urgency'] ?? UrgencyLevel::Standard->value);
+            $measurements = $this->cleanMeasurementValues($tailoringService, $data['measurement_values'] ?? []);
             $parameters = $this->cleanKeyValueData($data['parameters'] ?? []);
-            $quantity = max(1, (int) $data['quantity']);
+            $quantity = max(1, (int) ($data['quantity'] ?? 1));
 
             $order = Order::query()->create([
                 'order_number' => $this->generateOrderNumber(),
                 'customer_id' => $customer->id,
-                'clothing_model_id' => $clothingModel->id,
-                'material_id' => $material->id,
+                'clothing_model_id' => $clothingModel?->id,
+                'tailoring_service_id' => $tailoringService->id,
+                'material_id' => $material?->id,
                 'status' => OrderStatus::New,
                 'quantity' => $quantity,
                 'complexity' => $complexity,
@@ -45,6 +54,7 @@ class OrderCreationService
                 'parameters' => $parameters,
                 'customer_comment' => $data['customer_comment'] ?? null,
                 'preliminary_price' => $this->calculator->calculate(
+                    $tailoringService,
                     $clothingModel,
                     $material,
                     $complexity,
@@ -69,7 +79,7 @@ class OrderCreationService
                 ]);
             }
 
-            return $order->load(['clothingModel', 'material', 'referenceImages']);
+            return $order->load(['clothingModel', 'tailoringService', 'material', 'referenceImages']);
         });
     }
 
@@ -99,6 +109,31 @@ class OrderCreationService
             }
 
             $result[(string) $key] = is_numeric($value) ? (float) $value : $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function cleanMeasurementValues(TailoringService $service, array $values): array
+    {
+        if (! $service->requires_measurements || $service->measurementTypes->isEmpty()) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($service->measurementTypes as $type) {
+            $value = $values[$type->id] ?? null;
+
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            $result[$type->name] = is_numeric($value) ? (float) $value : trim((string) $value);
         }
 
         return $result;

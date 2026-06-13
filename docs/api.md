@@ -46,6 +46,7 @@ PATCH /orders/{order}/cancel
 Rules:
 
 - only authenticated customers can create orders;
+- selected tailoring service defines whether clothing model, material, quantity, complexity, urgency, and measurements are required;
 - customers can view only their own orders;
 - customers can cancel orders only before production starts.
 
@@ -91,7 +92,9 @@ Filament resources:
 OrderResource
 ClothingCategoryResource
 ClothingModelResource
+TailoringServiceResource
 MaterialResource
+MeasurementTypeResource
 UserResource
 ```
 
@@ -102,5 +105,7 @@ Admin can:
 - edit statuses;
 - edit final prices;
 - manage catalog;
+- manage services;
 - manage materials;
+- manage measurement types;
 - manage users.

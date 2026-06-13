@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClothingModel;
+use App\Models\TailoringService;
 
 class HomeController extends Controller
 {
@@ -15,6 +16,12 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        return view('home', compact('models'));
+        $tailoringServices = TailoringService::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        return view('home', compact('models', 'tailoringServices'));
     }
 }

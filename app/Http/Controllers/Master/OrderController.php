@@ -11,7 +11,7 @@ class OrderController extends Controller
     {
         $orders = request()->user()
             ->assignedOrders()
-            ->with(['customer', 'clothingModel', 'material'])
+            ->with(['customer', 'clothingModel', 'tailoringService', 'material'])
             ->latest()
             ->paginate(10);
 
@@ -23,7 +23,7 @@ class OrderController extends Controller
         $this->authorize('view', $order);
 
         return view('master.orders.show', [
-            'order' => $order->load(['customer', 'clothingModel.category', 'material', 'referenceImages']),
+            'order' => $order->load(['customer', 'clothingModel.category', 'tailoringService', 'material', 'referenceImages']),
         ]);
     }
 }

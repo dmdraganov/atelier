@@ -1,86 +1,99 @@
-<x-layouts.app title="Ателье">
-    <section class="grid min-h-[calc(100vh-180px)] grid-cols-[minmax(0,1.02fr)_minmax(340px,.98fr)] items-center gap-10 py-6 max-[1080px]:min-h-0 max-[1080px]:grid-cols-1">
-        <div class="max-w-[680px] min-w-0">
-            <span class="eyebrow">Учебная система ателье</span>
-            <h1 class="mt-5 mb-0 max-w-[680px] text-[clamp(36px,4.8vw,64px)] font-black leading-[.98] tracking-normal text-slate-950">Индивидуальный пошив одежды</h1>
-            <p class="section-copy mt-6">Выберите модель, материал и параметры изделия. Система покажет предварительную стоимость, сохранит мерки и поможет отслеживать заказ до завершения.</p>
+<x-layouts.app title="Atelier — индивидуальный пошив">
+    <section class="grid min-h-[calc(100vh-170px)] grid-cols-[minmax(0,.92fr)_minmax(420px,1.08fr)] items-center gap-10 py-6 max-[1080px]:min-h-0 max-[1080px]:grid-cols-1">
+        <div class="max-w-[640px]">
+            <h1 class="atelier-serif m-0 text-[clamp(44px,6vw,86px)] leading-[.9] text-[#3d1028]">Одежда, сшитая под вашу посадку</h1>
+            <p class="mt-6 max-w-[590px] text-[18px] leading-8 text-[#6f5b66]">Создаём изделия по вашим меркам, дорабатываем посадку готовой одежды и помогаем подобрать материал под силуэт, сезон и повод.</p>
             <div class="mt-8 flex flex-wrap items-center gap-3">
-                <a class="btn btn-primary min-h-12 px-5" href="{{ route('catalog.index') }}">Открыть каталог</a>
                 @auth
                     @if (auth()->user()->role === \App\Enums\UserRole::Customer)
-                        <a class="btn btn-secondary min-h-12 px-5" href="{{ route('orders.create') }}">Создать заказ</a>
+                        <a class="btn btn-primary min-h-12 px-5" href="{{ route('orders.create') }}">Оформить заказ</a>
                     @endif
                 @else
-                    <a class="btn btn-secondary min-h-12 px-5" href="{{ route('register') }}">Зарегистрироваться</a>
+                    <a class="btn btn-primary min-h-12 px-5" href="{{ route('register') }}">Записаться</a>
                 @endauth
+                <a class="btn btn-secondary min-h-12 px-5" href="{{ route('catalog.index') }}">Смотреть каталог</a>
             </div>
-            <dl class="mt-10 grid max-w-[680px] grid-cols-3 gap-5 border-y border-slate-200 py-6 max-[640px]:grid-cols-1">
+            <div class="mt-10 grid grid-cols-3 gap-5 border-y border-[#e3d4da] py-6 max-[680px]:grid-cols-1">
                 <div class="metric-card">
-                    <dt class="text-sm font-semibold text-slate-500">Каталог</dt>
-                    <dd class="m-0 mt-1 text-lg font-extrabold text-slate-950">{{ $models->count() }} моделей</dd>
+                    <p class="m-0 text-sm font-bold text-[#8a6875]">Пошив</p>
+                    <p class="m-0 mt-1 text-lg font-black text-[#3d1028]">платья, костюмы, рубашки</p>
                 </div>
                 <div class="metric-card">
-                    <dt class="text-sm font-semibold text-slate-500">Цена</dt>
-                    <dd class="m-0 mt-1 text-lg font-extrabold text-slate-950">расчёт до отправки</dd>
+                    <p class="m-0 text-sm font-bold text-[#8a6875]">Посадка</p>
+                    <p class="m-0 mt-1 text-lg font-black text-[#3d1028]">коррекция по фигуре</p>
                 </div>
                 <div class="metric-card">
-                    <dt class="text-sm font-semibold text-slate-500">Статусы</dt>
-                    <dd class="m-0 mt-1 text-lg font-extrabold text-slate-950">история заказов</dd>
+                    <p class="m-0 text-sm font-bold text-[#8a6875]">Материалы</p>
+                    <p class="m-0 mt-1 text-lg font-black text-[#3d1028]">подбор ткани и деталей</p>
                 </div>
-            </dl>
+            </div>
         </div>
 
-        <div class="atelier-card relative min-h-[560px] overflow-hidden bg-slate-100 max-[920px]:min-h-[420px]">
-            <div class="absolute inset-0 grid grid-cols-2 gap-px bg-slate-200">
-                @foreach ($models->take(4) as $model)
-                    <div class="grid place-items-center overflow-hidden bg-slate-50">
-                        @if ($model->image_path)
-                            <img class="h-full w-full object-cover" src="{{ asset($model->image_path) }}" alt="{{ $model->name }}">
-                        @else
-                            <span class="text-7xl font-black text-slate-300">{{ mb_substr($model->name, 0, 1) }}</span>
-                        @endif
-                    </div>
+        <div class="grid min-h-[590px] grid-cols-[1fr_.72fr] gap-4 max-[680px]:min-h-0 max-[680px]:grid-cols-1">
+            <div class="atelier-shell overflow-hidden bg-[#f8eef1]">
+                @if ($models->first()?->image_path)
+                    <img class="h-full min-h-[590px] w-full object-cover max-[680px]:min-h-[360px]" src="{{ asset($models->first()->image_path) }}" alt="{{ $models->first()->name }}">
+                @endif
+            </div>
+            <div class="grid gap-4">
+                @foreach ($models->skip(1)->take(2) as $model)
+                    <a class="atelier-card group overflow-hidden no-underline" href="{{ route('catalog.show', $model) }}">
+                        <div class="grid aspect-[4/3] place-items-center overflow-hidden bg-[#f4e6ea]">
+                            @if ($model->image_path)
+                                <img class="h-full w-full object-cover transition duration-300 group-hover:opacity-90" src="{{ asset($model->image_path) }}" alt="{{ $model->name }}">
+                            @else
+                                <span class="atelier-serif text-6xl text-[#b86b7a]">{{ mb_substr($model->name, 0, 1) }}</span>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <p class="m-0 text-xs font-black uppercase tracking-[.08em] text-[#b9852f]">{{ $model->category->name }}</p>
+                            <h2 class="m-0 mt-1 text-lg font-black text-[#3d1028]">{{ $model->name }}</h2>
+                        </div>
+                    </a>
                 @endforeach
             </div>
-            <div class="absolute bottom-5 left-5 right-5 rounded-lg border border-white/80 bg-white/95 p-5 shadow-2xl shadow-slate-950/15 backdrop-blur">
-                <div class="flex items-start justify-between gap-5 max-[560px]:flex-col">
-                    <div>
-                        <p class="m-0 text-sm font-bold text-teal-700">Популярная модель</p>
-                        <h2 class="mb-0 mt-1 text-2xl font-extrabold text-slate-950">{{ $models->first()?->name ?? 'Классическое платье' }}</h2>
-                    </div>
-                    <div class="text-right max-[560px]:text-left">
-                        <p class="m-0 text-sm font-semibold text-slate-500">от</p>
-                        <strong class="text-2xl"><x-price :value="$models->first()?->base_price ?? 12000" /></strong>
-                    </div>
-                </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-16">
+        <div class="grid grid-cols-[.7fr_1fr] gap-10 max-[920px]:grid-cols-1">
+            <div>
+                <p class="section-kicker m-0">Услуги</p>
+                <h2 class="section-title mt-3">От идеи до точной посадки</h2>
+                <p class="section-copy mt-5">Мы не ограничиваем заказ одной моделью: можно сшить изделие с нуля, адаптировать базовый фасон или доработать готовую вещь.</p>
+            </div>
+            <div class="atelier-shell p-6">
+                @foreach ($tailoringServices as $service)
+                    <article class="service-panel grid grid-cols-[220px_1fr] gap-6 max-[640px]:grid-cols-1">
+                        <h3 class="m-0 text-xl font-black text-[#3d1028]">{{ $service->name }}</h3>
+                        <p class="m-0 leading-7 text-[#6f5b66]">{{ $service->description }}</p>
+                    </article>
+                @endforeach
             </div>
         </div>
     </section>
 
-    <section class="grid grid-cols-3 gap-4 border-y border-slate-200 py-12 max-[920px]:grid-cols-1">
-        <div class="atelier-card-subtle p-5">
-            <span class="text-sm font-extrabold text-teal-700">01</span>
-            <h2 class="mb-2 mt-3 text-xl font-extrabold">Выберите модель</h2>
-            <p class="m-0 leading-7 text-slate-600">Каталог задаёт базовую цену, срок и уровень сложности для дальнейшего расчёта.</p>
-        </div>
-        <div class="atelier-card-subtle p-5">
-            <span class="text-sm font-extrabold text-teal-700">02</span>
-            <h2 class="mb-2 mt-3 text-xl font-extrabold">Добавьте параметры</h2>
-            <p class="m-0 leading-7 text-slate-600">Материал, срочность, мерки, комментарий и референсы сохраняются в заказе.</p>
-        </div>
-        <div class="atelier-card-subtle p-5">
-            <span class="text-sm font-extrabold text-teal-700">03</span>
-            <h2 class="mb-2 mt-3 text-xl font-extrabold">Следите за статусом</h2>
-            <p class="m-0 leading-7 text-slate-600">Администратор уточняет финальную цену, мастер видит назначенные ему заказы.</p>
-        </div>
+    <section id="process" class="grid grid-cols-4 gap-4 border-y border-[#e3d4da] py-14 max-[920px]:grid-cols-2 max-[560px]:grid-cols-1">
+        @foreach ([
+            ['01', 'Выберите основу', 'Каталог помогает быстро определить фасон и базовую стоимость.'],
+            ['02', 'Заполните бриф', 'Укажите материал, мерки, срочность, детали и приложите референсы.'],
+            ['03', 'Получите оценку', 'Система покажет предварительную цену, администратор уточнит итог после просмотра.'],
+            ['04', 'Следите за заказом', 'В личном кабинете сохраняются статусы, цены и детали заказа.'],
+        ] as [$number, $title, $description])
+            <article class="atelier-card-subtle p-5">
+                <span class="font-serif text-3xl font-semibold text-[#b9852f]">{{ $number }}</span>
+                <h3 class="mb-2 mt-4 text-xl font-black text-[#3d1028]">{{ $title }}</h3>
+                <p class="m-0 leading-7 text-[#6f5b66]">{{ $description }}</p>
+            </article>
+        @endforeach
     </section>
 
-    <section class="py-14">
+    <section class="py-16">
         <div class="mb-7 flex items-end justify-between gap-5 max-[640px]:items-start">
             <div>
-                <span class="eyebrow">Каталог</span>
-                <h2 class="section-title mt-4">Популярные модели</h2>
-                <p class="section-copy mt-3">Базовые услуги ателье с ориентировочной стоимостью и сроком пошива.</p>
+                <p class="section-kicker m-0">Каталог</p>
+                <h2 class="section-title mt-3">Популярные основы</h2>
+                <p class="section-copy mt-3">Модели задают стартовую точку: фасон, сложность, срок и базовую стоимость.</p>
             </div>
             <a class="btn btn-secondary shrink-0" href="{{ route('catalog.index') }}">Все модели</a>
         </div>

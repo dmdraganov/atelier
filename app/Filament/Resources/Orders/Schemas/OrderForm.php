@@ -31,8 +31,9 @@ class OrderForm
                     ->options(fn (): array => User::query()->where('role', UserRole::Master->value)->pluck('name', 'id')->all())
                     ->searchable()
                     ->preload(),
-                Select::make('clothing_model_id')->label('Модель')->relationship('clothingModel', 'name')->searchable()->preload()->required(),
-                Select::make('material_id')->label('Материал')->relationship('material', 'name')->searchable()->preload()->required(),
+                Select::make('clothing_model_id')->label('Модель')->relationship('clothingModel', 'name')->searchable()->preload(),
+                Select::make('tailoring_service_id')->label('Услуга')->relationship('tailoringService', 'name')->searchable()->preload()->required(),
+                Select::make('material_id')->label('Материал')->relationship('material', 'name')->searchable()->preload(),
                 Select::make('status')
                     ->label('Статус')
                     ->options(collect(OrderStatus::cases())->mapWithKeys(fn (OrderStatus $status): array => [$status->value => $status->label()])->all())

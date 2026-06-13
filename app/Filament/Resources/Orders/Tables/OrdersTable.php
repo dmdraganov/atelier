@@ -20,6 +20,7 @@ class OrdersTable
                 TextColumn::make('customer.name')->label('Клиент')->searchable(),
                 TextColumn::make('master.name')->label('Мастер')->placeholder('Не назначен'),
                 TextColumn::make('clothingModel.name')->label('Модель')->searchable(),
+                TextColumn::make('tailoringService.name')->label('Услуга')->searchable()->placeholder('Не указана'),
                 TextColumn::make('status')->label('Статус')->formatStateUsing(fn ($state) => $state->label())->badge(),
                 TextColumn::make('preliminary_price')->label('Предв. цена')->money('RUB')->sortable(),
                 TextColumn::make('final_price')->label('Фин. цена')->money('RUB')->placeholder('Не назначена')->sortable(),

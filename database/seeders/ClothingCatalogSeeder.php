@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Enums\ComplexityLevel;
 use App\Models\ClothingCategory;
 use App\Models\ClothingModel;
+use App\Models\MeasurementType;
 use App\Models\Material;
+use App\Models\TailoringService;
 use Illuminate\Database\Seeder;
 
 class ClothingCatalogSeeder extends Seeder
@@ -85,6 +87,151 @@ class ClothingCatalogSeeder extends Seeder
                     ],
                 );
             }
+        }
+
+        foreach ([
+            [
+                'name' => 'Пошив изделия с нуля',
+                'slug' => 'custom-tailoring',
+                'description' => 'Полный цикл пошива по выбранной модели, меркам и референсам.',
+                'pricing_mode' => 'model_based',
+                'base_price' => 6000,
+                'model_price_factor' => 1,
+                'price_modifier' => 0,
+                'requires_model' => true,
+                'requires_material' => true,
+                'requires_measurements' => true,
+                'applies_complexity' => true,
+                'applies_urgency' => true,
+                'applies_quantity' => true,
+                'sort_order' => 10,
+            ],
+            [
+                'name' => 'Коррекция посадки готовой вещи',
+                'slug' => 'fit-alteration',
+                'description' => 'Доработка готового изделия по фигуре: длина, талия, плечи, рукав, прилегание.',
+                'pricing_mode' => 'alteration',
+                'base_price' => 2200,
+                'model_price_factor' => 0.15,
+                'price_modifier' => 0,
+                'requires_model' => true,
+                'requires_material' => false,
+                'requires_measurements' => true,
+                'applies_complexity' => true,
+                'applies_urgency' => true,
+                'applies_quantity' => true,
+                'sort_order' => 20,
+            ],
+            [
+                'name' => 'Вечерний или праздничный образ',
+                'slug' => 'occasion-look',
+                'description' => 'Изделие для события с повышенным вниманием к декоративным деталям и посадке.',
+                'pricing_mode' => 'model_based',
+                'base_price' => 9500,
+                'model_price_factor' => 1.15,
+                'price_modifier' => 0,
+                'requires_model' => true,
+                'requires_material' => true,
+                'requires_measurements' => true,
+                'applies_complexity' => true,
+                'applies_urgency' => true,
+                'applies_quantity' => true,
+                'sort_order' => 30,
+            ],
+            [
+                'name' => 'Деловой костюм или капсула',
+                'slug' => 'business-wardrobe',
+                'description' => 'Костюмные изделия и согласованные комплекты для делового гардероба.',
+                'pricing_mode' => 'model_based',
+                'base_price' => 7000,
+                'model_price_factor' => 1.1,
+                'price_modifier' => 0,
+                'requires_model' => true,
+                'requires_material' => true,
+                'requires_measurements' => true,
+                'applies_complexity' => true,
+                'applies_urgency' => true,
+                'applies_quantity' => true,
+                'sort_order' => 40,
+            ],
+            [
+                'name' => 'Консультация по ткани и фасону',
+                'slug' => 'fabric-style-consultation',
+                'description' => 'Подбор ткани, силуэта и деталей перед созданием изделия.',
+                'pricing_mode' => 'fixed',
+                'base_price' => 2500,
+                'model_price_factor' => 0,
+                'price_modifier' => 0,
+                'requires_model' => false,
+                'requires_material' => false,
+                'requires_measurements' => false,
+                'applies_complexity' => false,
+                'applies_urgency' => false,
+                'applies_quantity' => false,
+                'sort_order' => 50,
+            ],
+        ] as $service) {
+            TailoringService::query()->updateOrCreate(['slug' => $service['slug']], [...$service, 'is_active' => true]);
+        }
+
+        foreach ([
+            ['name' => 'Рост', 'slug' => 'height', 'unit' => 'см', 'help_text' => 'Полный рост без обуви.', 'is_required' => true, 'sort_order' => 10],
+            ['name' => 'Обхват груди', 'slug' => 'chest', 'unit' => 'см', 'help_text' => 'По самым выступающим точкам.', 'is_required' => true, 'sort_order' => 20],
+            ['name' => 'Обхват талии', 'slug' => 'waist', 'unit' => 'см', 'help_text' => 'По естественной линии талии.', 'is_required' => true, 'sort_order' => 30],
+            ['name' => 'Обхват бедер', 'slug' => 'hips', 'unit' => 'см', 'help_text' => 'По самой широкой части бедер.', 'is_required' => false, 'sort_order' => 40],
+            ['name' => 'Длина изделия', 'slug' => 'garment-length', 'unit' => 'см', 'help_text' => 'Желаемая длина готового изделия.', 'is_required' => false, 'sort_order' => 50],
+            ['name' => 'Длина рукава', 'slug' => 'sleeve-length', 'unit' => 'см', 'help_text' => 'От плечевой точки до нужной длины.', 'is_required' => false, 'sort_order' => 60],
+        ] as $measurementType) {
+            MeasurementType::query()->updateOrCreate(['slug' => $measurementType['slug']], [...$measurementType, 'is_active' => true]);
+        }
+
+        $measurements = MeasurementType::query()->pluck('id', 'slug');
+        $measurementRules = [
+            'custom-tailoring' => ['height', 'chest', 'waist', 'hips', 'garment-length', 'sleeve-length'],
+            'fit-alteration' => ['chest', 'waist', 'hips', 'garment-length', 'sleeve-length'],
+            'occasion-look' => ['height', 'chest', 'waist', 'hips', 'garment-length', 'sleeve-length'],
+            'business-wardrobe' => ['height', 'chest', 'waist', 'hips', 'garment-length', 'sleeve-length'],
+            'fabric-style-consultation' => [],
+        ];
+
+        foreach ($measurementRules as $serviceSlug => $measurementSlugs) {
+            $service = TailoringService::query()->where('slug', $serviceSlug)->firstOrFail();
+            $syncData = [];
+
+            foreach ($measurementSlugs as $index => $measurementSlug) {
+                $measurementId = $measurements[$measurementSlug] ?? null;
+
+                if (! $measurementId) {
+                    continue;
+                }
+
+                $syncData[$measurementId] = [
+                    'is_required' => in_array($measurementSlug, ['height', 'chest', 'waist'], true),
+                    'sort_order' => ($index + 1) * 10,
+                ];
+            }
+
+            $service->measurementTypes()->sync($syncData);
+        }
+
+        $modelIds = ClothingModel::query()->pluck('id', 'slug');
+        $modelRules = [
+            'custom-tailoring' => $modelIds->keys()->all(),
+            'fit-alteration' => $modelIds->keys()->all(),
+            'occasion-look' => ['classic-dress', 'evening-dress'],
+            'business-wardrobe' => ['business-suit', 'mens-shirt', 'pencil-skirt', 'classic-trousers'],
+            'fabric-style-consultation' => [],
+        ];
+
+        foreach ($modelRules as $serviceSlug => $modelSlugs) {
+            $service = TailoringService::query()->where('slug', $serviceSlug)->firstOrFail();
+            $service->clothingModels()->sync(
+                collect($modelSlugs)
+                    ->map(fn (string $modelSlug): ?int => $modelIds[$modelSlug] ?? null)
+                    ->filter()
+                    ->values()
+                    ->all(),
+            );
         }
 
         foreach ([

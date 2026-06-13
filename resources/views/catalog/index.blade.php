@@ -1,20 +1,20 @@
-<x-layouts.app title="Каталог">
-    <section class="grid grid-cols-[minmax(0,1fr)_320px] gap-8 border-b border-slate-200 pb-10 pt-5 max-[920px]:grid-cols-1">
+<x-layouts.app title="Каталог моделей">
+    <section class="grid grid-cols-[minmax(0,1fr)_320px] gap-8 border-b border-[#e3d4da] pb-10 pt-5 max-[920px]:grid-cols-1">
         <div>
-            <span class="eyebrow">Каталог моделей</span>
-            <h1 class="section-title mt-4">Выберите основу для заказа</h1>
-            <p class="section-copy mt-5">Базовые услуги ателье с ориентировочными сроками и стартовой стоимостью. После выбора модели можно указать материал, срочность, мерки и референсы.</p>
+            <p class="section-kicker m-0">Каталог</p>
+            <h1 class="section-title mt-3">Фасоны для индивидуального заказа</h1>
+            <p class="section-copy mt-5">Выберите основу изделия, а в заказе уточните материал, посадку, срочность, мерки и пожелания к деталям.</p>
         </div>
-        <div class="atelier-card-subtle self-end p-5">
-            <p class="m-0 text-sm font-bold text-slate-500">Активных моделей</p>
-            <strong class="mt-2 block text-5xl font-black text-slate-950">{{ $models->total() }}</strong>
-            <p class="m-0 mt-2 text-sm leading-6 text-slate-600">каждая доступна для предварительного расчёта.</p>
+        <div class="atelier-shell self-end p-5">
+            <p class="m-0 text-sm font-bold text-[#8a6875]">Доступно для заказа</p>
+            <strong class="atelier-serif mt-2 block text-6xl leading-none text-[#5a1839]">{{ $models->total() }}</strong>
+            <p class="m-0 mt-2 text-sm leading-6 text-[#6f5b66]">моделей с предварительным расчётом стоимости.</p>
         </div>
     </section>
 
     <div class="my-6 flex flex-wrap gap-2.5">
         @foreach ($categories as $category)
-            <span class="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-sm font-bold text-slate-600">{{ $category->name }}</span>
+            <span class="rounded-full border border-[#e3d4da] bg-[#fffdfb] px-3.5 py-2 text-sm font-bold text-[#6f5b66]">{{ $category->name }}</span>
         @endforeach
     </div>
 

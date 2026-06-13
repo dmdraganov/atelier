@@ -4,11 +4,14 @@ namespace Tests\Feature;
 
 use App\Enums\ComplexityLevel;
 use App\Enums\OrderStatus;
+use App\Enums\ServicePricingMode;
 use App\Enums\UrgencyLevel;
 use App\Models\ClothingCategory;
 use App\Models\ClothingModel;
+use App\Models\MeasurementType;
 use App\Models\Material;
 use App\Models\Order;
+use App\Models\TailoringService;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -24,16 +27,17 @@ class OrderWorkflowTest extends TestCase
         Storage::fake('public');
 
         $customer = User::factory()->customer()->create();
-        [$model, $material] = $this->catalog();
+        [$model, $service, $material, $measurement] = $this->catalog();
 
         $response = $this->actingAs($customer)->post(route('orders.store'), [
             'clothing_model_id' => $model->id,
+            'tailoring_service_id' => $service->id,
             'material_id' => $material->id,
             'quantity' => 2,
             'complexity' => ComplexityLevel::Medium->value,
             'urgency' => UrgencyLevel::Fast->value,
-            'measurements' => [
-                ['key' => 'Рост', 'value' => '170'],
+            'measurement_values' => [
+                $measurement->id => '170',
             ],
             'parameters' => [
                 ['key' => 'Длина', 'value' => 'миди'],
@@ -48,23 +52,60 @@ class OrderWorkflowTest extends TestCase
 
         $response->assertRedirect(route('orders.show', $order));
         $this->assertSame(OrderStatus::New, $order->status);
+        $this->assertSame($service->id, $order->tailoring_service_id);
         $this->assertSame('Рост', array_key_first($order->measurements));
         $this->assertSame('Длина', array_key_first($order->parameters));
-        $this->assertEquals(25500.0, (float) $order->preliminary_price);
+        $this->assertEquals(43500.0, (float) $order->preliminary_price);
         $this->assertCount(1, $order->referenceImages);
         Storage::disk('public')->assertExists($order->referenceImages->first()->file_path);
+    }
+
+    public function test_customer_can_create_fixed_consultation_without_model_material_or_measurements(): void
+    {
+        $customer = User::factory()->customer()->create();
+        $service = TailoringService::query()->create([
+            'name' => 'Консультация по ткани и фасону',
+            'slug' => 'fabric-style-consultation',
+            'pricing_mode' => ServicePricingMode::Fixed,
+            'base_price' => 2500,
+            'model_price_factor' => 0,
+            'requires_model' => false,
+            'requires_material' => false,
+            'requires_measurements' => false,
+            'applies_complexity' => false,
+            'applies_urgency' => false,
+            'applies_quantity' => false,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($customer)->post(route('orders.store'), [
+            'tailoring_service_id' => $service->id,
+            'quantity' => 20,
+            'complexity' => ComplexityLevel::Complex->value,
+            'urgency' => UrgencyLevel::Urgent->value,
+            'customer_comment' => 'Нужна консультация по ткани.',
+        ]);
+
+        $order = Order::query()->firstOrFail();
+
+        $response->assertRedirect(route('orders.show', $order));
+        $this->assertNull($order->clothing_model_id);
+        $this->assertNull($order->material_id);
+        $this->assertSame([], $order->measurements);
+        $this->assertEquals(2500.0, (float) $order->preliminary_price);
     }
 
     public function test_customer_cannot_view_another_customer_order(): void
     {
         $owner = User::factory()->customer()->create();
         $other = User::factory()->customer()->create();
-        [$model, $material] = $this->catalog();
+        [$model, $service, $material] = $this->catalog();
 
         $order = Order::query()->create([
             'order_number' => 'AT-TEST-00001',
             'customer_id' => $owner->id,
             'clothing_model_id' => $model->id,
+            'tailoring_service_id' => $service->id,
             'material_id' => $material->id,
             'status' => OrderStatus::New,
             'quantity' => 1,
@@ -81,13 +122,14 @@ class OrderWorkflowTest extends TestCase
         $customer = User::factory()->customer()->create();
         $master = User::factory()->master()->create();
         $anotherMaster = User::factory()->master()->create();
-        [$model, $material] = $this->catalog();
+        [$model, $service, $material] = $this->catalog();
 
         $assigned = Order::query()->create([
             'order_number' => 'AT-TEST-00002',
             'customer_id' => $customer->id,
             'master_id' => $master->id,
             'clothing_model_id' => $model->id,
+            'tailoring_service_id' => $service->id,
             'material_id' => $material->id,
             'status' => OrderStatus::Confirmed,
             'quantity' => 1,
@@ -101,6 +143,7 @@ class OrderWorkflowTest extends TestCase
             'customer_id' => $customer->id,
             'master_id' => $anotherMaster->id,
             'clothing_model_id' => $model->id,
+            'tailoring_service_id' => $service->id,
             'material_id' => $material->id,
             'status' => OrderStatus::Confirmed,
             'quantity' => 1,
@@ -144,7 +187,7 @@ class OrderWorkflowTest extends TestCase
     }
 
     /**
-     * @return array{0: ClothingModel, 1: Material}
+     * @return array{0: ClothingModel, 1: TailoringService, 2: Material, 3?: MeasurementType}
      */
     private function catalog(): array
     {
@@ -170,6 +213,34 @@ class OrderWorkflowTest extends TestCase
             'is_active' => true,
         ]);
 
-        return [$model, $material];
+        $service = TailoringService::query()->create([
+            'name' => 'Пошив изделия с нуля',
+            'slug' => 'custom-tailoring',
+            'pricing_mode' => ServicePricingMode::ModelBased,
+            'base_price' => 6000,
+            'model_price_factor' => 1,
+            'price_modifier' => 0,
+            'requires_model' => true,
+            'requires_material' => true,
+            'requires_measurements' => true,
+            'applies_complexity' => true,
+            'applies_urgency' => true,
+            'applies_quantity' => true,
+            'is_active' => true,
+            'sort_order' => 10,
+        ]);
+
+        $measurement = MeasurementType::query()->create([
+            'name' => 'Рост',
+            'slug' => 'height',
+            'unit' => 'см',
+            'is_active' => true,
+            'sort_order' => 10,
+        ]);
+
+        $service->measurementTypes()->attach($measurement->id, ['is_required' => true, 'sort_order' => 10]);
+        $service->clothingModels()->attach($model->id);
+
+        return [$model, $service, $material, $measurement];
     }
 }
