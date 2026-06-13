@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\ClothingCategory;
 use App\Models\ClothingModel;
+use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $categories = ClothingCategory::query()
             ->where('is_active', true)
@@ -19,14 +20,18 @@ class CatalogController extends Controller
             ->orderBy('name')
             ->get();
 
+        $activeCategory = $categories->firstWhere('slug', $request->query('category'));
+
         $models = ClothingModel::query()
             ->where('is_active', true)
+            ->when($activeCategory, fn ($query) => $query->whereBelongsTo($activeCategory, 'category'))
             ->with('category')
             ->orderBy('sort_order')
             ->orderBy('name')
-            ->paginate(12);
+            ->paginate(12)
+            ->withQueryString();
 
-        return view('catalog.index', compact('categories', 'models'));
+        return view('catalog.index', compact('categories', 'models', 'activeCategory'));
     }
 
     public function show(ClothingModel $clothingModel)

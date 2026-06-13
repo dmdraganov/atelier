@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Юбка-карандаш">
-  <rect width="640" height="420" fill="#f8fafc"/>
-  <path d="M252 88h136l28 256H224l28-256Z" fill="#475569"/>
-  <path d="M252 88h136" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
-  <path d="M320 112v208" stroke="#cbd5e1" stroke-width="6"/>
-</svg>

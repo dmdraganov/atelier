@@ -12,16 +12,27 @@
         </div>
     </section>
 
-    <div class="my-6 flex flex-wrap gap-2.5">
+    <nav class="my-6 flex flex-wrap gap-2.5" aria-label="Фильтр каталога по категориям">
+        <a
+            class="rounded-full border px-3.5 py-2 text-sm font-bold no-underline transition hover:border-[#b9852f] hover:text-[#3d1028] {{ $activeCategory ? 'border-[#e3d4da] bg-[#fffdfb] text-[#6f5b66]' : 'border-[#5a1839] bg-[#5a1839] text-white' }}"
+            href="{{ route('catalog.index') }}"
+        >Все</a>
         @foreach ($categories as $category)
-            <span class="rounded-full border border-[#e3d4da] bg-[#fffdfb] px-3.5 py-2 text-sm font-bold text-[#6f5b66]">{{ $category->name }}</span>
+            <a
+                class="rounded-full border px-3.5 py-2 text-sm font-bold no-underline transition hover:border-[#b9852f] hover:text-[#3d1028] {{ $activeCategory?->is($category) ? 'border-[#5a1839] bg-[#5a1839] text-white' : 'border-[#e3d4da] bg-[#fffdfb] text-[#6f5b66]' }}"
+                href="{{ route('catalog.index', ['category' => $category->slug]) }}"
+            >{{ $category->name }}</a>
         @endforeach
-    </div>
+    </nav>
 
     <section class="grid grid-cols-3 gap-5 max-[920px]:grid-cols-1">
-        @foreach ($models as $model)
+        @forelse ($models as $model)
             @include('catalog.partials.card', ['model' => $model])
-        @endforeach
+        @empty
+            <div class="atelier-shell col-span-full p-6">
+                <p class="m-0 font-bold text-[#3d1028]">В этой категории пока нет активных моделей.</p>
+            </div>
+        @endforelse
     </section>
 
     <div class="mt-8">
