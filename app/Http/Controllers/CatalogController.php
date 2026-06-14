@@ -12,10 +12,12 @@ class CatalogController extends Controller
     {
         $categories = ClothingCategory::query()
             ->where('is_active', true)
-            ->with(['clothingModels' => fn ($query) => $query
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->orderBy('name')])
+            ->with([
+                'clothingModels' => fn($query) => $query
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+            ])
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
@@ -24,11 +26,11 @@ class CatalogController extends Controller
 
         $models = ClothingModel::query()
             ->where('is_active', true)
-            ->when($activeCategory, fn ($query) => $query->whereBelongsTo($activeCategory, 'category'))
+            ->when($activeCategory, fn($query) => $query->whereBelongsTo($activeCategory, 'category'))
             ->with('category')
             ->orderBy('sort_order')
             ->orderBy('name')
-            ->paginate(12)
+            ->paginate(6)
             ->withQueryString();
 
         return view('catalog.index', compact('categories', 'models', 'activeCategory'));

@@ -24,8 +24,8 @@ class ClothingCatalogSeeder extends Seeder
                 'description' => 'Повседневные и вечерние платья по индивидуальным меркам.',
                 'sort_order' => 10,
                 'models' => [
-                    ['name' => 'Классическое платье', 'slug' => 'classic-dress', 'description' => 'Лаконичное платье-футляр для офиса, мероприятий и базового гардероба.', 'image_path' => 'images/catalog/classic-dress.svg', 'base_price' => 8500, 'default_complexity' => ComplexityLevel::Medium, 'estimated_days' => 10],
-                    ['name' => 'Вечернее платье', 'slug' => 'evening-dress', 'description' => 'Индивидуальный крой, декоративные детали и точная посадка по фигуре.', 'image_path' => 'images/catalog/evening-dress.svg', 'base_price' => 18000, 'default_complexity' => ComplexityLevel::Complex, 'estimated_days' => 18],
+                    ['name' => 'Классическое платье', 'slug' => 'classic-dress', 'description' => 'Лаконичное платье-футляр для офиса, мероприятий и базового гардероба.', 'image_path' => 'images/catalog/classic-dress.jpg', 'base_price' => 8500, 'default_complexity' => ComplexityLevel::Medium, 'estimated_days' => 10],
+                    ['name' => 'Вечернее платье', 'slug' => 'evening-dress', 'description' => 'Индивидуальный крой, декоративные детали и точная посадка по фигуре.', 'image_path' => 'images/catalog/evening-dress.webp', 'base_price' => 18000, 'default_complexity' => ComplexityLevel::Complex, 'estimated_days' => 18],
                 ],
             ],
             [
@@ -34,7 +34,7 @@ class ClothingCatalogSeeder extends Seeder
                 'description' => 'Женские и мужские костюмы для работы и особых случаев.',
                 'sort_order' => 20,
                 'models' => [
-                    ['name' => 'Деловой костюм', 'slug' => 'business-suit', 'description' => 'Пиджак и брюки или юбка с аккуратной посадкой и подкладкой.', 'image_path' => 'images/catalog/business-suit.svg', 'base_price' => 22000, 'default_complexity' => ComplexityLevel::Complex, 'estimated_days' => 20],
+                    ['name' => 'Деловой костюм', 'slug' => 'business-suit', 'description' => 'Пиджак и брюки или юбка с аккуратной посадкой и подкладкой.', 'image_path' => 'images/catalog/business-suit.avif', 'base_price' => 22000, 'default_complexity' => ComplexityLevel::Complex, 'estimated_days' => 20],
                 ],
             ],
             [
@@ -43,7 +43,7 @@ class ClothingCatalogSeeder extends Seeder
                 'description' => 'Рубашки и блузы на каждый день.',
                 'sort_order' => 30,
                 'models' => [
-                    ['name' => 'Мужская рубашка', 'slug' => 'mens-shirt', 'description' => 'Классическая рубашка с выбором воротника, манжет и посадки.', 'image_path' => 'images/catalog/mens-shirt.svg', 'base_price' => 6200, 'default_complexity' => ComplexityLevel::Simple, 'estimated_days' => 7],
+                    ['name' => 'Мужская рубашка', 'slug' => 'mens-shirt', 'description' => 'Классическая рубашка с выбором воротника, манжет и посадки.', 'image_path' => 'images/catalog/mens-shirt.webp', 'base_price' => 6200, 'default_complexity' => ComplexityLevel::Simple, 'estimated_days' => 7],
                 ],
             ],
             [
@@ -52,8 +52,8 @@ class ClothingCatalogSeeder extends Seeder
                 'description' => 'Базовые изделия с точной подгонкой по фигуре.',
                 'sort_order' => 40,
                 'models' => [
-                    ['name' => 'Юбка-карандаш', 'slug' => 'pencil-skirt', 'description' => 'Строгая юбка с комфортной посадкой и выбранной длиной.', 'image_path' => 'images/catalog/pencil-skirt.svg', 'base_price' => 5200, 'default_complexity' => ComplexityLevel::Simple, 'estimated_days' => 6],
-                    ['name' => 'Классические брюки', 'slug' => 'classic-trousers', 'description' => 'Брюки с индивидуальной посадкой, карманами и выбранной шириной.', 'image_path' => 'images/catalog/classic-trousers.svg', 'base_price' => 7000, 'default_complexity' => ComplexityLevel::Medium, 'estimated_days' => 8],
+                    ['name' => 'Юбка-карандаш', 'slug' => 'pencil-skirt', 'description' => 'Строгая юбка с комфортной посадкой и выбранной длиной.', 'image_path' => 'images/catalog/pencil-skirt.jpg', 'base_price' => 5200, 'default_complexity' => ComplexityLevel::Simple, 'estimated_days' => 6],
+                    ['name' => 'Классические брюки', 'slug' => 'classic-trousers', 'description' => 'Брюки с индивидуальной посадкой, карманами и выбранной шириной.', 'image_path' => 'images/catalog/classic-trousers.jpg', 'base_price' => 7000, 'default_complexity' => ComplexityLevel::Medium, 'estimated_days' => 8],
                 ],
             ],
             [
@@ -62,7 +62,7 @@ class ClothingCatalogSeeder extends Seeder
                 'description' => 'Сложные верхние изделия на сезон.',
                 'sort_order' => 50,
                 'models' => [
-                    ['name' => 'Классическое пальто', 'slug' => 'classic-coat', 'description' => 'Пальто на подкладке с воротником, карманами и точной посадкой.', 'image_path' => 'images/catalog/classic-coat.svg', 'base_price' => 28000, 'default_complexity' => ComplexityLevel::Complex, 'estimated_days' => 24],
+                    ['name' => 'Классическое пальто', 'slug' => 'classic-coat', 'description' => 'Пальто на подкладке с воротником, карманами и точной посадкой.', 'image_path' => 'images/catalog/classic-coat.jpg', 'base_price' => 28000, 'default_complexity' => ComplexityLevel::Complex, 'estimated_days' => 24],
                 ],
             ],
         ];
@@ -201,7 +201,7 @@ class ClothingCatalogSeeder extends Seeder
             foreach ($measurementSlugs as $index => $measurementSlug) {
                 $measurementId = $measurements[$measurementSlug] ?? null;
 
-                if (! $measurementId) {
+                if (!$measurementId) {
                     continue;
                 }
 
@@ -227,7 +227,7 @@ class ClothingCatalogSeeder extends Seeder
             $service = TailoringService::query()->where('slug', $serviceSlug)->firstOrFail();
             $service->clothingModels()->sync(
                 collect($modelSlugs)
-                    ->map(fn (string $modelSlug): ?int => $modelIds[$modelSlug] ?? null)
+                    ->map(fn(string $modelSlug): ?int => $modelIds[$modelSlug] ?? null)
                     ->filter()
                     ->values()
                     ->all(),
